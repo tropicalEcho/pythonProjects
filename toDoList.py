@@ -1,9 +1,9 @@
 from sys import exit
 from shlex import split
-from os import system as sys, name as OSname
+import os
 
 def clear():
-    sys("cls" if OSname == "nt" else "clear")
+    os.system("cls" if os.name == "nt" else "clear")
 
 toDo = {}
 
@@ -78,7 +78,7 @@ def main():
                 if not cmd:
                     continue
                 command = cmd[0].upper()
-                if command in ("EXIT", "quit"):
+                if command in ("EXIT", "QUIT"):
                     exit("GOODBYE!")
                 elif command in ("CLEAR", "CLS"):
                     clear()
