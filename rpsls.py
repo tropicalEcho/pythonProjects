@@ -4,7 +4,7 @@ def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
 CHARACTERS = ["ROCK", "PAPER", "SCISSORS", "LIZARD", "SPOCK"]
-COMMANDS = ["CLEAR", "CLS", "EXIT", "QUIT", "HELP", "MANUAL"]
+COMMANDS = ["CLEAR", "CLS", "EXIT", "QUIT", "HELP", "MANUAL", "SHELDON", "GUIDE", "H"]
 
 WINS = {
     "ROCK": ["SCISSORS", "LIZARD"],
@@ -16,10 +16,10 @@ WINS = {
 
 regularHelp = """
 COMMANDS:
-CLEAR | CLS     CLEARS THE SCREEN
-EXIT | QUIT     KILLS THE GAME
-HELP            PRINTS THIS
-MANUAL          SUMMONS SHELDON FOR HELP
+CLEAR | CLS                  CLEARS THE SCREEN
+EXIT | QUIT                  KILLS THE GAME
+HELP | H                     PRINTS THIS
+MANUAL | GUIDE | SHELDON     SUMMONS SHELDON FOR HELP
 
 GUIDE:
 ENTER ( SINGLE | SINGLEPLAYER | 1 | ONE | MONO ) IF YOU WANNA PLAY AGAINST COMPUTER
@@ -45,9 +45,9 @@ def handleCommands(command):
         clear()
     elif command in ["EXIT", "QUIT"]:
         sys.exit("GOODBYE!")
-    elif command == "MANUAL":
+    elif command in ["MANUAL", "GUIDE", "SHELDON"]:
         print(sheldonHelp)
-    elif command == "HELP":
+    elif command in ["HELP", "H"]:
         print(regularHelp)
     else:
         return False
