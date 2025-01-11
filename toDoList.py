@@ -8,19 +8,24 @@ def clear():
 toDo = {}
 
 manual = """
-HELP | H                                                                            WRITES DOWN THIS
-ADD | A <TASKNAME> [--PRIORITY | -P PRIORITY] [--STATUS | -S STATUS]                ADDS ASKED ITEM
-REMOVE | REM | R <TASKNAME>                                                         REMOVES ASKED ITEM
-UPDATE | U <OLDNAME> <NEWNAME> [--PRIORITY | -P PRIORITY] [--STATUS | -S STATUS]    EDITS ASKED ITEM AND UPDATES THE VALUES
-WRITE | SHOW | PRINT                                                                WRITES DOWN THE TO DO LIST
-CLEAR | CLS                                                                         CLEARS TERMINAL
-EXIT | QUIT                                                                         KILLS THE PROGRAM
+COMMANDS:
+HELP | H                          - PRINTS THIS
+ADD | A <TASKNAME>                - ADDS ASKED ITEM
+    [-P | --PRIORITY PRIORITY]        - SETS PRIORITY OF THE TASK
+    [--STATUS | -S STATUS]            - SETS STATUS OF THE TASK
+REMOVE | REM | R <TASKNAME>       - REMOVES ASKED ITEM
+UPDATE | U <OLDNAME> <NEWNAME>    - EDITS ASKED ITEM AND UPDATES THE VALUES
+    [-P | --PRIORITY PRIORITY]        - SETS PRIORITY OF THE TASK
+    [--STATUS | -S STATUS]            - SETS PRIORITY OF THE TASK
+WRITE | SHOW | PRINT              - WRITES DOWN THE TO DO LIST
+CLEAR | CLS                       - CLEARS TERMINAL
+EXIT | QUIT                       - KILLS THE PROGRAM
 """
 
 def add2List(taskName="UNTITLED", priority="NOT SET", status="NOT DONE"):
     validPriorities = ["LOW", "MEDIUM", "HIGH", "NOT SET"]
     if priority not in validPriorities:
-        print(f"ERROR: INVALID PRIORITY... SETTING PRIORITY to 'NOT SET'.")
+        print(f"ERROR: INVALID PRIORITY... SETTING PRIORITY TO 'NOT SET'.")
         priority = "NOT SET"
     toDo[taskName] = [priority, status]
 
