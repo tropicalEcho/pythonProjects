@@ -37,7 +37,7 @@ LIZARD eats PAPER
 PAPER disproves SPOCK
 SPOCK vaporizes ROCK
 and as it always has
-ROCK crushes SCISSORS
+ROCK crushes SCISSORS   
 """
 
 def handleCommands(command):
