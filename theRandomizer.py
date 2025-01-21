@@ -1,14 +1,10 @@
-import random
-import os
-import sys
-import time
-import json
+import random, os, sys, time, json
 from datetime import datetime, timedelta
 
 jar = []
 saveJar = False
 history = []
-historyFile = "randomizer_history.json"
+historyFile = "randomizerHistory.json"
 
 try:
     with open(historyFile, 'r') as f:
@@ -16,7 +12,6 @@ try:
 except FileNotFoundError:
     history = []
 
-# Save actions to history and persist to a file
 def save2History(command, input_data, result):
     entry = {
         'when': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -28,20 +23,16 @@ def save2History(command, input_data, result):
     with open(historyFile, 'w') as f:
         json.dump(history, f, indent=2)
 
-# Clear the terminal screen
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
-# Generate a random number between start and end
-def get_random_number(start, end):
+def getNumber(start, end):
     return random.randint(start, end)
 
-# Roll a dice with a specified number of faces
-def roll_dice(FACES=6):
+def rollDice(FACES=6):
     return random.randint(1, FACES)
 
-# Generate a random time between start and end (HH:MM:SS format)
-def get_random_time(start=None, end=None):
+def getTime(start=None, end=None):
     if not start and not end:
         seconds = random.randint(0, 86399)
         return time.strftime('%H:%M:%S', time.gmtime(seconds))
@@ -50,47 +41,38 @@ def get_random_time(start=None, end=None):
     t2 = sum(int(x) * 60 ** i for i, x in enumerate(reversed(end.split(':'))))
     return time.strftime('%H:%M:%S', time.gmtime(random.randint(t1, t2)))
 
-# Simulate a coin flip
-def flip_coin():
+def flipCoin():
     return random.choice(["HEADS", "TAILS"])
 
-# Generate a random date between start and end (YYYY-MM-DD format)
-def get_random_date(start, end):
+def getDate(start, end):
     date1 = datetime.strptime(start, '%Y-%m-%d')
     date2 = datetime.strptime(end, '%Y-%m-%d')
     days_between = (date2 - date1).days
     return (date1 + timedelta(days=random.randint(0, days_between))).strftime('%Y-%m-%d')
 
-# Shuffle a list of items
-def scramble_list(items):
+def scrambleList(items):
     shuffled = items.copy()
     random.shuffle(shuffled)
     return shuffled
 
-# Generate a random color in RGB and HEX formats
-def get_random_color():
+def getColor():
     r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
     return f"RGB({r},{g},{b}) | #{r:02x}{g:02x}{b:02x}"
 
-# Pick a random playing card
-def get_random_card():
-    suits = ['\u2660', '\u2663', '\u2665', '\u2666']  # Unicode for card suits
+def getCard():
+    suits = ['\u2660', '\u2663', '\u2665', '\u2666']  
     values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
     return f"{random.choice(values)}{random.choice(suits)}"
 
-# Pick a random chemical element
-def get_element():
+def getElement():
     elements = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne"]
     return random.choice(elements)
 
-# Pick a random country
-def get_random_country():
+def getCountry():
     countries = ["USA", "UK", "India", "Japan", "Canada"]
     return random.choice(countries)
 
-# Pick items from the jar
-# Optionally removes picked items if saveJar is off
-def pick_from_jar(count=1, delay=0):
+def pickJar(count=1, delay=0):
     global jar
     if not jar:
         return []
@@ -108,7 +90,6 @@ def pick_from_jar(count=1, delay=0):
         jar.clear()
     return picked
 
-# Display help text for commands
 helpText = """
 COMMANDS:
 NUM start end       - RANDOM NUMBER
@@ -130,7 +111,6 @@ HELP                - SHOW HELP TEXT
 EXIT                - QUIT
 """
 
-# Main interactive loop
 def main():
     global jar, saveJar
     clear()
@@ -145,57 +125,57 @@ def main():
             command = cmdParts[0].upper()
 
             if command in ["NUM", "NUMBER"] and len(cmdParts) == 3:
-                result = get_random_number(int(cmdParts[1]), int(cmdParts[2]))
+                result = getNumber(int(cmdParts[1]), int(cmdParts[2]))
                 print(result)
                 save2History("number", f"{cmdParts[1]}-{cmdParts[2]}", result)
 
             elif command == "DICE":
                 FACES = int(cmdParts[1]) if len(cmdParts) > 1 else 6
-                result = roll_dice(FACES)
+                result = rollDice(FACES)
                 print(result)
                 save2History("dice", str(FACES), result)
 
             elif command == "TIME":
                 if len(cmdParts) == 3:
-                    result = get_random_time(cmdParts[1], cmdParts[2])
+                    result = getTime(cmdParts[1], cmdParts[2])
                 else:
-                    result = get_random_time()
+                    result = getTime()
                 print(result)
                 save2History("time", "", result)
 
             elif command == "COIN":
-                result = flip_coin()
+                result = flipCoin()
                 print(result)
                 save2History("coin", "", result)
 
             elif command == "DATE" and len(cmdParts) == 3:
-                result = get_random_date(cmdParts[1], cmdParts[2])
+                result = getDate(cmdParts[1], cmdParts[2])
                 print(result)
                 save2History("date", f"{cmdParts[1]}-{cmdParts[2]}", result)
 
             elif command == "MIX" and len(cmdParts) > 1:
                 items = ' '.join(cmdParts[1:]).split(',')
-                result = scramble_list(items)
+                result = scrambleList(items)
                 print(result)
                 save2History("mix", str(items), str(result))
 
             elif command == "COLOR":
-                result = get_random_color()
+                result = getColor()
                 print(result)
                 save2History("color", "", result)
 
             elif command == "CARD":
-                result = get_random_card()
+                result = getCards()
                 print(result)
                 save2History("card", "", result)
 
             elif command == "ELEM":
-                result = get_element()
+                result = getElement()
                 print(result)
                 save2History("element", "", result)
 
             elif command == "LAND":
-                result = get_random_country()
+                result = getCountry()
                 print(result)
                 save2History("country", "", result)
 
@@ -207,7 +187,7 @@ def main():
             elif command == "PICK":
                 count = int(cmdParts[1]) if len(cmdParts) > 1 else 1
                 delay = float(cmdParts[2]) if len(cmdParts) > 2 else 0
-                result = pick_from_jar(count, delay)
+                result = pickJar(count, delay)
                 if result:
                     print(f"PICKED: {', '.join(result)}")
                 else:
