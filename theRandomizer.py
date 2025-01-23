@@ -1,6 +1,6 @@
 import random, os, sys, time
 
-help_text = """
+helpText = """
 COMMANDS:
 <ITEM>               Add item to the jar
 CLEAR | CLS          Clear the screen
@@ -89,12 +89,6 @@ def handleDone(arguments):
     
     pickItems(count, delay)
 
-def handleExit(arguments):
-    if '-Y' in arguments or '--YES' in arguments or not jar:
-        sys.exit("GOODBYE!")
-    if confirmation("JAR NOT EMPTY! EXIT ANYWAYS? (Y/N) "):
-        sys.exit("GOODBYE!")
-
 def randomAnswer():
     time.sleep(random.uniform(0.5, 1.5))
     print(random.choice(["YES", "NO"]))
@@ -107,21 +101,19 @@ def main():
         try:
             prompt = input(f"~\\theRandomizer\\[{len(jar)+1}]> ").strip()
             
-            if not prompt:
-                continue
+            if not prompt: continue
             
             promtParts = prompt.split()
             cmd = promtParts[0].upper()
-            arguments = promtParts[1:]
             
             if cmd in {'CLEAR', 'CLS'}:
                 clear()
             elif cmd in {'HELP', 'H'}:
-                print(help_text)
+                print(helpText)
             elif cmd in {'EXIT', 'QUIT'}:
                 sys.exit("GOODBYE!")
             elif cmd == 'DONE':
-                handleDone(arguments)
+                handleDone(promtParts[1:])
             elif cmd in {'YESNO', 'YN'}:
                 randomAnswer()
             elif cmd in {'LIST', 'LS'}:
