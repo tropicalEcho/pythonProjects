@@ -41,12 +41,12 @@ def showJar():
     for idx, (item, count) in enumerate(counts.items(), 1):
         print(f"{idx:>3}. {item} ({count}x)")
 
-def pickItems(how_many=1, delay=0):
+def pickItems(howMany=1, delay=0):
     selected = []
-    original_jar = jar.copy()
+    originalJar = jar.copy()
     
     try:
-        while len(selected) < how_many and jar:
+        while len(selected) < howMany and jar:
             choice = random.choice(jar)
             jar.remove(choice)
             selected.append(choice)
@@ -62,26 +62,26 @@ def pickItems(how_many=1, delay=0):
     except KeyboardInterrupt:
         print("\nSELECTION INTERRUPTED!")
         jar.clear()
-        jar.extend(original_jar)
+        jar.extend(originalJar)
         if selected:
             print(f"PARTIAL SELECTION: {', '.join(selected)}")
 
-def handleDone(args):
+def handleDone(arguments):
     count = 1
     delay = 0
     i = 0
     
-    while i < len(args):
-        arg = args[i].upper()
+    while i < len(arguments):
+        arg = arguments[i].upper()
         try:
             if arg in {'-T', '--TIME'}:
-                delay = max(0, float(args[i+1]))
+                delay = max(0, float(arguments[i+1]))
                 i += 2
             elif arg in {'-C', '--COUNT'}:
-                count = max(1, int(args[i+1]))
+                count = max(1, int(arguments[i+1]))
                 i += 2
             else:
-                print(f"UNKNOWN OPTION: {args[i]}")
+                print(f"UNKNOWN OPTION: {arguments[i]}")
                 return
         except (IndexError, ValueError):
             print("INVALID VALUE FOR OPTION:", arg)
@@ -89,8 +89,8 @@ def handleDone(args):
     
     pickItems(count, delay)
 
-def handleExit(args):
-    if '-Y' in args or '--YES' in args or not jar:
+def handleExit(arguments):
+    if '-Y' in arguments or '--YES' in arguments or not jar:
         sys.exit("GOODBYE!")
     if confirmation("JAR NOT EMPTY! EXIT ANYWAYS? (Y/N) "):
         sys.exit("GOODBYE!")
@@ -105,41 +105,35 @@ def main():
     
     while True:
         try:
-            prompt = f"~\\theRandomizer\\[{len(jar)+1}]> "
-            user_input = input(prompt).strip()
+            prompt = input(f"~\\theRandomizer\\[{len(jar)+1}]> ").strip()
             
-            if not user_input:
+            if not prompt:
                 continue
             
-            parts = user_input.split()
-            command = parts[0].lower()
-            args = parts[1:]
+            promtParts = prompt.split()
+            cmd = promtParts[0].upper()
+            arguments = promtParts[1:]
             
-            if command in {'clear', 'cls'}:
+            if cmd in {'CLEAR', 'CLS'}:
                 clear()
-            elif command in {'help', 'h'}:
+            elif cmd in {'HELP', 'H'}:
                 print(help_text)
-            elif command in {'exit', 'quit'}:
-                handleExit(args)
-            elif command == 'done':
-                handleDone(args)
-            elif command in {'yesno', 'yn'}:
+            elif cmd in {'EXIT', 'QUIT'}:
+                sys.exit("GOODBYE!")
+            elif cmd == 'DONE':
+                handleDone(arguments)
+            elif cmd in {'YESNO', 'YN'}:
                 randomAnswer()
-            elif command in {'list', 'ls'}:
+            elif cmd in {'LIST', 'LS'}:
                 showJar()
             else:
-                item = ' '.join(parts)
-                if item in jar:
-                    if confirmation(f"'{item}' already in jar. Add anyway? (Y/N) "):
-                        jar.append(item)
-                else:
-                    jar.append(item)
+                item = ' '.join(promtParts)
+                jar.append(item)
         
         except KeyboardInterrupt:
-            print("\nUse 'exit' to quit")
+            print("\nUSE 'EXIT' OR 'QUIT' TO KILL THE PROGRAM")
         except EOFError:
-            print("\nExiting...")
-            sys.exit()
+            sys.exit("\nERROR: GOTTA GO!")
 
 if __name__ == "__main__":
     main()
