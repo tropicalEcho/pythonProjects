@@ -1,6 +1,5 @@
-from sys import exit
 from shlex import split
-import os
+import os, sys
 
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
@@ -8,18 +7,17 @@ def clear():
 toDo = {}
 
 manual = """
-COMMANDS:
-HELP | H                          - PRINTS THIS
-ADD | A <TASKNAME>                - ADDS ASKED ITEM
-    [-P | --PRIORITY PRIORITY]        - SETS PRIORITY OF THE TASK
-    [--STATUS | -S STATUS]            - SETS STATUS OF THE TASK
-REMOVE | REM | R <TASKNAME>       - REMOVES ASKED ITEM
-UPDATE | U <OLDNAME> <NEWNAME>    - EDITS ASKED ITEM AND UPDATES THE VALUES
-    [-P | --PRIORITY PRIORITY]        - SETS PRIORITY OF THE TASK
-    [--STATUS | -S STATUS]            - SETS PRIORITY OF THE TASK
-WRITE | SHOW | PRINT              - WRITES DOWN THE TO DO LIST
-CLEAR | CLS                       - CLEARS TERMINAL
-EXIT | QUIT                       - KILLS THE PROGRAM
+HELP | H                          PRINTS THIS
+ADD | A <TASKNAME>                ADDS ASKED ITEM
+    [-P | --PRIORITY PRIORITY]    SETS PRIORITY OF THE TASK
+    [--STATUS | -S STATUS]        SETS STATUS OF THE TASK
+REMOVE | REM | R <TASKNAME>       REMOVES ASKED ITEM
+UPDATE | U <OLDNAME> <NEWNAME>    EDITS ASKED ITEM AND UPDATES THE VALUES
+    [-P | --PRIORITY PRIORITY]    SETS PRIORITY OF THE TASK
+    [--STATUS | -S STATUS]        SETS PRIORITY OF THE TASK
+WRITE | SHOW | PRINT              WRITES DOWN THE TO DO LIST
+CLEAR | CLS                       CLEARS TERMINAL SCREEN
+EXIT | QUIT                       KILLS THE PROGRAM
 """
 
 def add2List(taskName="UNTITLED", priority="NOT SET", status="NOT DONE"):
@@ -79,35 +77,35 @@ def main():
         clear()
         while True:
             try:
-                cmd = split(input("~\TODO\LIST1$ ").strip())
+                cmd = split(input("~\toDo\default$ ").strip())
                 if not cmd:
                     continue
                 command = cmd[0].upper()
-                if command in ("EXIT", "QUIT"):
-                    exit("GOODBYE!")
-                elif command in ("CLEAR", "CLS"):
+                if command in {"EXIT", "QUIT"}:
+                    sys.exit("GOODBYE!")
+                elif command in {"CLEAR", "CLS"}:
                     clear()
-                elif command in ("HELP", "H"):
+                elif command == "HELP":
                     print(manual)
-                elif command in ("ADD", "A"):
+                elif command == "ADD":
                     cleanCmd, priority, status = parseFlags(cmd[1:])
                     if not cleanCmd:
                         print("ERROR: GOT NO NAME!")
                         continue
                     add2List(cleanCmd[0], priority, status)
                     print(f"ADDED!")
-                elif command in ("REM", "REMOVE"):
+                elif command in {"REM", "REMOVE"}:
                     if len(cmd) < 2:
                         print("ERROR: GOT NO NAME!")
                         continue
                     removeListItem(cmd[1])
-                elif command in ("UPDATE", "U"):
+                elif command == "UPDATE":
                     cleanCmd, priority, status = parseFlags(cmd[1:])
                     if len(cleanCmd) < 2:
                         print("ERROR: NEED OLD AND NEW NAME!")
                         continue
                     updateList(cleanCmd[0], cleanCmd[1], priority, status)
-                elif command in ("WRITE", "PRINT", "SHOW"):
+                elif command in {"WRITE", "PRINT", "SHOW"}:
                     writeList()
                 else:
                     print("INVALID COMMAND!")
