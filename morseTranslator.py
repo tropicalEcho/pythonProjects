@@ -14,39 +14,44 @@ EXIT | QUIT    KILLS THE PROGRAM
 MORSE = [
     '.-', '-...', '-.-.', '-..', '.', '..-.', '--.', '....', '..', '.---', '-.-', '.-..', '--', '-.', '---', '.--.', '--.-', '.-.', '...', '-', '..-', '...-', '.--', '-..-', '-.--', '--..',
     '-----', '.----', '..---', '...--', '....-', '.....', '-....', '--...', '---..', '----.',
-    '.-.-.-', '--..--', '..--..', '.----.', '-.-.--', '-..-.', '-....-', '.-..-.', '---...', '-.-.-.', '-...-', '.-.-.', '/--.-'
+    '.-.-.-', '--..--', '..--..', '.----.', '-.-.--', '-..-.', '-....-', '.-..-.', '---...', '-.-.-.', '-...-', '.-.-.', '--..--.', '..--.-', '.--.-.'
 ]
 
 nonMORSE = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    '.', ',', '?', "'", '!', '-', '/', '"', ':', ';', '=', '@'
+    '.', ',', '?', "'", '!', '/', '-', '"', ':', ';', '=', '_', '@'
 ]
 
-morseDict    = dict(zip(nonMORSE, MORSE))
-upsideDownMD = dict(zip(MORSE, nonMORSE))
+morseDict = dict(zip(nonMORSE, MORSE))
+reverseMD = dict(zip(MORSE, nonMORSE))
 
 def checkInput(uI):
-    for char in uI: 
-        if char.upper() not in nonMORSE and char != ' ':
-            return False
-    return True
+    allowedChars = set(nonMORSE + [' '])
+    return all(char.upper() in allowedChars for char in uI)
 
 def translate(userInput, isRegular):
     if isRegular:
-        userInput = userInput.upper()
-        morseCode = ' '.join([morseDict.get(char, '') for char in userInput if char != ' '])
+        words = userInput.upper().split()
+        transWords = []
+        for word in words:
+            transChar = [morseDict.get(char, '') for char in word]
+            transWords.append(' '.join(transChar))
+        morseCode = ' / '.join(transWords)
         print(f"MORSE: {morseCode}")
     else:
-        morseChars = userInput.split(' ')
-        translatedText = ''.join([reverseMorseDict.get(code, '') for code in morseChars if code != ''])
-        print(f"TEXT: {translatedText}")
+        transWords = []
+        for morseWord in userInput.split(' / '):
+            transChar = [reverseMD.get(code, '') for code in morseWord.split()]
+            transWords.append(''.join(transChar))
+        plainText = ' '.join(transWords)
+        print(f"TEXT: {plainText}")
 
 def main():
     clear()
     while True:
-        uINPUT = input("~\\morseTranslator$ ").strip()
-        cmd = uINPUT.split()[0].upper()
+        uInput = input("~\\morseTranslator$ ").strip()
+        cmd = uInput.split()[0].upper()
 
         if cmd in {"CLS", "CLEAR"}:
             clear()
@@ -55,11 +60,10 @@ def main():
         elif cmd in {"HELP"}:
             print(helpText)
         else:
-            if checkInput(uINPUT):
-                if any(char in uINPUT for char in '.-'):
-                    translate(uINPUT, isRegular=False)
-                else: 
-                    translate(uINPUT, isRegular=True)
+            if any(char in uInput for char in '.-/'):
+                translate(uInput, isRegular=False)
+            elif checkInput(uInput):
+                translate(uInput, isRegular=True)
             else:
                 print("INVALID INPUT!")
                 
