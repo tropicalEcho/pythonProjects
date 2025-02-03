@@ -2,34 +2,35 @@ from sys import exit
 from random import randint
 
 try: 
-    number = randint(int(input("Initial: ")), int(input("Final: ")))
+    number = randint(int(input("INITAL: ")), int(input("FINAL: ")))
 except ValueError: 
-    print("Error!")
-    exit("Goodbye!")
+    print("ERROR!")
+    exit("GOODBYE!")
 
 while True:
     try: 
-        total_guesses = int(input("How many chances? [1, 25]: "))
-        if 1 <= total_guesses <= 25: 
+        totalGuesses = int(input("HOW MANY CHANCES? [1, 25]: "))
+        if 1 <= totalGuesses <= 25: 
             break
     except ValueError: 
-        print("Error!")
+        print("ERROR!")
 
-for guesses in range(1, total_guesses + 1):
+for guesses in range(1, totalGuesses + 1):
     try: 
         guess = int(input(f"Guess {guesses}: "))
     except: 
-        print("Error!")
-        exit("Goodbye!")
+        print("ERROR!")
+        exit("GOODBYE!")
+
     if guess == 0: 
-        print(f"Number: {number}")
+        print(f"NUMBER: {number}")
         break
     elif guess == number: 
-        print("You Won!")
+        print("YOU WON!")
         break
     elif guess > number: 
-        print("Try something less than that")
+        print("SOMETHIN' LESS")
     else: 
-        print("Try with something more than that")
+        print("SOMTHIN' MORE")
 else: 
-    print("You Lost!")
+    print("YOU LOST!")

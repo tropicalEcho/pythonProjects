@@ -4,9 +4,8 @@ import os, sys
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
-# Store multiple to-do lists
-todo_lists = {}
-selected_list = None
+toDos = {}
+selectedList = None
 
 manual = """
 HELP | H                          PRINTS THIS
@@ -27,44 +26,44 @@ EXIT | QUIT                       KILLS THE PROGRAM
 """
 
 def add2List(taskName="UNTITLED", priority="NOT SET", status="NOT DONE"):
-    if selected_list is None:
+    if selectedList is None:
         print("ERROR: NO LIST SELECTED!")
         return
     validPriorities = ["LOW", "MEDIUM", "HIGH", "NOT SET"]
     if priority not in validPriorities:
         print(f"ERROR: INVALID PRIORITY... SETTING PRIORITY TO 'NOT SET'.")
         priority = "NOT SET"
-    todo_lists[selected_list][taskName] = [priority, status]
+    toDos[selectedList][taskName] = [priority, status]
     print("ADDED!")
 
 def writeList():
-    if selected_list is None:
+    if selectedList is None:
         print("ERROR: NO LIST SELECTED!")
         return
-    if todo_lists[selected_list]:
-        for idx, (key, value) in enumerate(todo_lists[selected_list].items(), start=1):
+    if toDos[selectedList]:
+        for idx, (key, value) in enumerate(toDos[selectedList].items(), start=1):
             print(f"{idx}. {key} -> PRIORITY: {value[0]}; STATUS: {value[1]}")
     else:
         print("TO DO IS EMPTY!")
 
 def removeListItem(taskName):
-    if selected_list is None:
+    if selectedList is None:
         print("ERROR: NO LIST SELECTED!")
         return
-    if taskName in todo_lists[selected_list]:
-        del todo_lists[selected_list][taskName]
+    if taskName in toDos[selectedList]:
+        del toDos[selectedList][taskName]
         print("REMOVED!")
     else:
         print("ERROR: TASK NOT FOUND!")
 
 def updateList(oldName, newName, newPriority="NOT SET", newStatus="NOT DONE"):
-    if selected_list is None:
+    if selectedList is None:
         print("ERROR: NO LIST SELECTED!")
         return
-    if oldName in todo_lists[selected_list]:
-        todo_lists[selected_list][newName] = [newPriority, newStatus]
+    if oldName in toDos[selectedList]:
+        toDos[selectedList][newName] = [newPriority, newStatus]
         if oldName != newName:
-            del todo_lists[selected_list][oldName]
+            del toDos[selectedList][oldName]
         print("UPDATED!")
     else:
         print("ERROR: TASK NOT FOUND!")
@@ -89,12 +88,12 @@ def parseFlags(cmd):
     return cleanCmd, priority, status
 
 def main():
-    global selected_list
+    global selectedList
     try:
         clear()
         while True:
             try:
-                cmd = split(input(f"~\\toDo\\{selected_list if selected_list else 'NO LIST SELECTED'}$ ").strip())
+                cmd = split(input(f"~\\toDo\\{selectedList if selectedList else 'NO LIST SELECTED'}$ ").strip())
                 if not cmd:
                     continue
                 command = cmd[0].upper()
@@ -106,25 +105,25 @@ def main():
                 elif command == "HELP":
                     print(manual)
                 elif command == "LISTS":
-                    print("AVAILABLE TODO LISTS:", ", ".join(todo_lists.keys()) if todo_lists else "NONE")
+                    print("AVAILABLE TODO LISTS:", ", ".join(toDos.keys()) if toDos else "NONE")
                 elif command == "CREATE":
                     if len(cmd) < 2:
                         print("ERROR: NO LIST NAME GIVEN!")
                         continue
                     list_name = cmd[1]
-                    if list_name in todo_lists:
+                    if list_name in toDos:
                         print("ERROR: LIST ALREADY EXISTS!")
                     else:
-                        todo_lists[list_name] = {}
+                        toDos[list_name] = {}
                         print(f"CREATED TODO LIST: {list_name}")
                 elif command == "SELECT":
                     if len(cmd) < 2:
                         print("ERROR: NO LIST NAME GIVEN!")
                         continue
                     list_name = cmd[1]
-                    if list_name in todo_lists:
-                        selected_list = list_name
-                        print(f"SELECTED TODO LIST: {selected_list}")
+                    if list_name in toDos:
+                        selectedList = list_name
+                        print(f"SELECTED TODO LIST: {selectedList}")
                     else:
                         print("ERROR: LIST NOT FOUND!")
                 elif command == "DELETE":
@@ -132,10 +131,10 @@ def main():
                         print("ERROR: NO LIST NAME GIVEN!")
                         continue
                     list_name = cmd[1]
-                    if list_name in todo_lists:
-                        del todo_lists[list_name]
-                        if selected_list == list_name:
-                            selected_list = None
+                    if list_name in toDos:
+                        del toDos[list_name]
+                        if selectedList == list_name:
+                            selectedList = None
                         print(f"DELETED TODO LIST: {list_name}")
                     else:
                         print("ERROR: LIST NOT FOUND!")
